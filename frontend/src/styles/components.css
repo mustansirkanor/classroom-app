@@ -1,0 +1,442 @@
+/* Component-specific styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer components{
+/* Header Component */
+.header {
+  @apply sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60;
+}
+
+.header-content {
+  @apply container flex h-14 items-center;
+}
+
+/* Sidebar Component */
+.sidebar {
+  @apply fixed inset-y-0 z-50 flex w-64 flex-col bg-background border-r;
+}
+
+.sidebar-collapsed {
+  @apply w-16;
+}
+
+.sidebar-nav {
+  @apply flex-1 space-y-1 p-2;
+}
+
+.sidebar-nav-item {
+  @apply flex w-full items-center rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground;
+}
+
+.sidebar-nav-item-active {
+  @apply bg-accent text-accent-foreground;
+}
+
+/* Navigation Component */
+.nav-tabs {
+  @apply flex space-x-1 rounded-md bg-muted p-1;
+}
+
+.nav-tab {
+  @apply flex-1 whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+}
+
+.nav-tab-active {
+  @apply bg-background text-foreground shadow-sm;
+}
+
+.nav-tab-inactive {
+  @apply text-muted-foreground hover:bg-accent hover:text-accent-foreground;
+}
+
+/* Modal Component */
+.modal-overlay {
+  @apply fixed inset-0 z-50 bg-background/80 backdrop-blur-sm;
+}
+
+.modal-content {
+  @apply fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 rounded-lg;
+}
+
+.modal-header {
+  @apply flex flex-col space-y-1.5 text-center sm:text-left;
+}
+
+.modal-title {
+  @apply text-lg font-semibold leading-none tracking-tight;
+}
+
+.modal-description {
+  @apply text-sm text-muted-foreground;
+}
+
+.modal-footer {
+  @apply flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2;
+}
+
+/* Form Components */
+.form-group {
+  @apply space-y-2;
+}
+
+.form-label {
+  @apply text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70;
+}
+
+.form-input {
+  @apply flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.form-textarea {
+  @apply flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.form-select {
+  @apply flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.form-checkbox {
+  @apply peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.form-radio {
+  @apply aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.form-error {
+  @apply text-sm font-medium text-destructive;
+}
+
+.form-help {
+  @apply text-sm text-muted-foreground;
+}
+
+/* Table Component */
+.table {
+  @apply w-full caption-bottom text-sm;
+}
+
+.table-header {
+  @apply border-b;
+}
+
+.table-header-row {
+  @apply border-b transition-colors hover:bg-muted/50;
+}
+
+.table-header-cell {
+  @apply h-12 px-4 text-left align-middle font-medium text-muted-foreground;
+}
+
+.table-body {
+  @apply [&_tr:last-child]:border-0;
+}
+
+.table-row {
+  @apply border-b transition-colors hover:bg-muted/50;
+}
+
+.table-cell {
+  @apply p-4 align-middle;
+}
+
+/* Dropdown Component */
+.dropdown-content {
+  @apply z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md;
+}
+
+.dropdown-item {
+  @apply relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground hover:bg-accent hover:text-accent-foreground;
+}
+
+.dropdown-separator {
+  @apply -mx-1 my-1 h-px bg-muted;
+}
+
+/* Tooltip Component */
+.tooltip-content {
+  @apply z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md;
+}
+
+/* Progress Component */
+.progress-root {
+  @apply relative h-4 w-full overflow-hidden rounded-full bg-secondary;
+}
+
+.progress-indicator {
+  @apply h-full w-full flex-1 bg-primary transition-all;
+}
+
+/* Avatar Component */
+.avatar-root {
+  @apply relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full;
+}
+
+.avatar-image {
+  @apply aspect-square h-full w-full;
+}
+
+.avatar-fallback {
+  @apply flex h-full w-full items-center justify-center rounded-full bg-muted;
+}
+
+/* Badge Component */
+.badge-root {
+  @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2;
+}
+
+.badge-default {
+  @apply border-transparent bg-primary text-primary-foreground hover:bg-primary/80;
+}
+
+.badge-secondary {
+  @apply border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80;
+}
+
+.badge-destructive {
+  @apply border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80;
+}
+
+.badge-outline {
+  @apply text-foreground;
+}
+
+/* Alert Component */
+.alert-root {
+  @apply relative w-full rounded-lg border p-4;
+}
+
+.alert-destructive {
+  @apply border-destructive/50 text-destructive [&>svg]:text-destructive;
+}
+
+/* Skeleton Component */
+.skeleton {
+  @apply animate-pulse rounded-md bg-muted;
+}
+
+/* Loading Component */
+.loading-spinner {
+  @apply animate-spin rounded-full border-2 border-current border-t-transparent;
+}
+
+.loading-dots {
+  @apply inline-flex items-center;
+}
+
+.loading-dot {
+  @apply h-2 w-2 rounded-full bg-current animate-pulse;
+}
+
+.loading-dot:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.loading-dot:nth-child(2) {
+  animation-delay: 150ms;
+}
+
+.loading-dot:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+/* Card Component Variations */
+.card-hover {
+  @apply transition-shadow duration-200 hover:shadow-md;
+}
+
+.card-clickable {
+  @apply cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02];
+}
+
+.card-gradient {
+  @apply bg-gradient-to-br from-background to-muted;
+}
+
+/* Button Component Variations */
+.btn-loading {
+  @apply pointer-events-none opacity-70;
+}
+
+.btn-loading::after {
+  content: '';
+  @apply inline-block ml-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent;
+}
+
+/* Input Component Variations */
+.input-error {
+  @apply border-destructive focus-visible:ring-destructive;
+}
+
+.input-success {
+  @apply border-green-500 focus-visible:ring-green-500;
+}
+
+/* Classroom Card Component */
+.classroom-card {
+  @apply bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow cursor-pointer;
+}
+
+.classroom-card-header {
+  @apply px-4 py-6 relative text-white;
+}
+
+.classroom-card-body {
+  @apply p-4;
+}
+
+.classroom-card-footer {
+  @apply border-t border-gray-100 px-4 py-3 bg-gray-50;
+}
+
+/* Material Card Component */
+.material-card {
+  @apply bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow;
+}
+
+.material-card-icon {
+  @apply p-2 bg-gray-50 rounded-lg;
+}
+
+/* Assignment Card Component */
+.assignment-card {
+  @apply bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow;
+}
+
+.assignment-status-overdue {
+  @apply text-red-600;
+}
+
+.assignment-status-due-today {
+  @apply text-orange-600;
+}
+
+.assignment-status-upcoming {
+  @apply text-green-600;
+}
+
+/* Progress Tracker Component */
+.progress-tracker {
+  @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+}
+
+.progress-ring {
+  @apply relative inline-flex items-center justify-center;
+}
+
+/* File Upload Component */
+.file-upload-zone {
+  @apply border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors;
+}
+
+.file-upload-zone-active {
+  @apply border-blue-500 bg-blue-50;
+}
+
+.file-list {
+  @apply mt-4 space-y-2;
+}
+
+.file-item {
+  @apply flex items-center justify-between p-3 bg-gray-50 rounded-lg;
+}
+
+/* Stream Post Component */
+.stream-post {
+  @apply bg-white rounded-lg shadow-sm border border-gray-200;
+}
+
+.stream-post-header {
+  @apply px-6 py-4 border-b border-gray-100;
+}
+
+.stream-post-content {
+  @apply px-6 py-4;
+}
+
+.stream-post-footer {
+  @apply px-6 py-3 border-t border-gray-100 bg-gray-50;
+}
+
+/* Comment Component */
+.comment {
+  @apply flex space-x-3 p-4;
+}
+
+.comment-avatar {
+  @apply flex-shrink-0;
+}
+
+.comment-content {
+  @apply flex-1 min-w-0;
+}
+
+.comment-header {
+  @apply flex items-center space-x-2 mb-1;
+}
+
+.comment-author {
+  @apply text-sm font-medium text-gray-900;
+}
+
+.comment-time {
+  @apply text-xs text-gray-500;
+}
+
+.comment-body {
+  @apply text-sm text-gray-700;
+}
+
+/* Responsive utilities */
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+  
+  .modal-content {
+    @apply w-[95vw] max-w-none;
+  }
+  
+  .sidebar {
+    @apply -translate-x-full;
+  }
+  
+  .sidebar-open {
+    @apply translate-x-0;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-auto {
+    grid-template-columns: 1fr;
+  }
+  
+  .table {
+    @apply text-xs;
+  }
+  
+  .table-cell {
+    @apply p-2;
+  }
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  .dark .classroom-card {
+    @apply bg-gray-800 border-gray-700;
+  }
+  
+  .dark .material-card {
+    @apply bg-gray-800 border-gray-700;
+  }
+  
+  .dark .assignment-card {
+    @apply bg-gray-800 border-gray-700;
+  }
+  
+  .dark .stream-post {
+    @apply bg-gray-800 border-gray-700;
+  }
+}
+}
