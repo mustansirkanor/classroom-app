@@ -16,7 +16,7 @@ const TeacherDashboard = () => {
 
   const { data: dashboardData, isLoading } = useQuery(
     'teacherDashboard',
-    () => api.get('/teacher/dashboard').then(res => res.data),
+    () => api.get('/api/teacher/dashboard').then(res => res.data),
     {
       retry: 1,
       staleTime: 5 * 60 * 1000,
@@ -36,9 +36,8 @@ const TeacherDashboard = () => {
     e.preventDefault();
     e.stopPropagation();
     console.log('Managing classroom with ID:', classroomId);
-    
     // Navigate to classroom management page
-    navigate(`/teacher/classroom/${classroomId}`);
+  navigate(`/teacher/classroom/${classroomId}`);
   };
 
   const getClassroomColor = (index) => {

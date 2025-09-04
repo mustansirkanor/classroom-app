@@ -87,26 +87,29 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import Modal from '../common/Modal';
+import api from '../../services/api';
+import { useQueryClient } from 'react-query';
 
 const JoinClassModal = ({ isOpen, onClose }) => {
   const [classCode, setClassCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!classCode.trim()) return;
-    
     setIsLoading(true);
-    
-    // Mock join class
-    setTimeout(() => {
+    try {
+      await api.post('/api/student/join-class', { classCode: classCode.toUpperCase() });
       toast.success('Successfully joined classroom!');
+      queryClient.invalidateQueries('studentDashboard');
       onClose();
       setClassCode('');
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Failed to join classroom');
+    } finally {
       setIsLoading(false);
-      // Optionally reload page to see new classroom
-      window.location.reload();
-    }, 1000);
+    }
   };
 
   const handleClose = () => {

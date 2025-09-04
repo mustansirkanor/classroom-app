@@ -17,18 +17,18 @@ const SubjectManagement = () => {
 
   const { data: subject, isLoading } = useQuery(
     ['teacherSubject', subjectId],
-    () => api.get(`/teacher/subject/${subjectId}`).then(res => res.data)
+    () => api.get(`api/teacher/subject/${subjectId}`).then(res => res.data)
   );
 
   const { data: materials } = useQuery(
     ['teacherMaterials', subjectId],
-    () => api.get(`/teacher/materials/${subjectId}`).then(res => res.data),
+    () => api.get(`api/teacher/materials/${subjectId}`).then(res => res.data),
     { enabled: !!subjectId }
   );
 
   const { data: assignments } = useQuery(
     ['teacherAssignments', subjectId],
-    () => api.get(`/teacher/assignments/${subjectId}`).then(res => res.data),
+    () => api.get(`api/teacher/assignments/${subjectId}`).then(res => res.data),
     { enabled: !!subjectId }
   );
 

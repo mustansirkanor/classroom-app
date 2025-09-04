@@ -12,14 +12,20 @@ const LoginPage = () => {
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
 
-  const from = location.state?.from?.pathname || (role === 'teacher' ? '/teacher-dashboard' : '/dashboard');
+  // After login, redirect based on user role from backend
+  const from = location.state?.from?.pathname || '/dashboard';
 
   const handleLogin = async (data) => {
     setIsLoading(true);
     try {
       const user = await login(data.email, data.password, role);
       toast.success('Login successful!');
-      navigate(from, { replace: true });
+      // Redirect based on user.role from backend
+      if (user.role === 'teacher') {
+        navigate('/teacher-dashboard', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     } catch (error) {
       toast.error(error.response?.data?.error || 'Login failed');
     } finally {

@@ -7,20 +7,31 @@ import Header from '../../components/common/Header';
 import SubjectCard from '../../components/student/SubjectCard';
 import api from '../../services/api';
 
+import materialService from '../../services/materialService';
+import MaterialCard from '../../components/student/MaterialCard';
+
+
 const ClassroomDetails = () => {
   const { classroomId } = useParams();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('stream');
+  const [activeTab, setActiveTab] = useState('subjects');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  // Fetch study materials for the classroom (for stream tab)
+  const { data: materials, isLoading: isMaterialsLoading } = useQuery(
+    ['materials', classroomId],
+    () => materialService.getMaterialsByClassroom(classroomId),
+    { enabled: !!classroomId }
+  );
 
   const { data: classroom, isLoading } = useQuery(
     ['classroom', classroomId],
-    () => api.get(`/student/classroom/${classroomId}`).then(res => res.data)
+    () => api.get(`api/student/classroom/${classroomId}`).then(res => res.data)
   );
 
   const { data: subjects } = useQuery(
     ['subjects', classroomId],
-    () => api.get(`/student/subjects/${classroomId}`).then(res => res.data),
+    () => api.get(`api/student/subjects/${classroomId}`).then(res => res.data),
     { enabled: !!classroomId }
   );
 
@@ -38,112 +49,65 @@ const ClassroomDetails = () => {
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
-      
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header 
           title={classroom?.name || 'Classroom'} 
           onMenuToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
           showSearch={false}
         />
-
         <div className="flex-1 overflow-y-auto">
-          {/* Classroom Header */}
-          <div className="bg-blue-600 text-white">
-            <div className="max-w-7xl mx-auto px-4 py-8">
-              <button 
-                onClick={() => navigate('/dashboard')}
-                className="flex items-center space-x-2 text-blue-100 hover:text-white mb-4 transition-colors"
+          <div className="max-w-4xl mx-auto px-4 py-8">
+            <button 
+              onClick={() => navigate('/dashboard')}
+              className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 mb-8 transition-colors"
+            >
+              <ArrowLeft size={20} />
+              <span>Back to Home</span>
+            </button>
+
+            {/* Tab Navigation */}
+            <div className="flex space-x-8 border-b border-gray-200 mb-8">
+              <button
+                className={`py-3 px-4 font-medium text-lg transition-colors ${activeTab === 'subjects' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+                onClick={() => setActiveTab('subjects')}
               >
-                <ArrowLeft size={20} />
-                <span>Back to Home</span>
+                Subjects
               </button>
-              
-              <div className="flex justify-between items-start">
-                <div>
-                  <h1 className="text-3xl font-bold mb-2">{classroom?.name}</h1>
-                  <p className="text-blue-100 mb-4">{classroom?.description}</p>
-                  <div className="flex items-center space-x-4 text-sm text-blue-100">
-                    <span className="flex items-center space-x-1">
-                      <Users size={16} />
-                      <span>{classroom?.students?.length} students</span>
-                    </span>
-                    <span>Class code: {classroom?.classCode}</span>
-                  </div>
-                </div>
-                <button className="p-2 hover:bg-blue-700 rounded-lg transition-colors">
-                  <MoreVertical size={20} />
-                </button>
-              </div>
+              <button
+                className={`py-3 px-4 font-medium text-lg transition-colors ${activeTab === 'people' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+                onClick={() => setActiveTab('people')}
+              >
+                People
+              </button>
             </div>
-          </div>
 
-          {/* Navigation Tabs */}
-          <div className="bg-white border-b border-gray-200">
-            <div className="max-w-7xl mx-auto px-4">
-              <nav className="flex space-x-8">
-                {[
-                  { key: 'stream', label: 'Stream' },
-                  { key: 'classwork', label: 'Classwork' },
-                  { key: 'people', label: 'People' }
-                ].map((tab) => (
-                  <button
-                    key={tab.key}
-                    onClick={() => setActiveTab(tab.key)}
-                    className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
-                      activeTab === tab.key
-                        ? 'border-blue-500 text-blue-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700'
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </nav>
-            </div>
-          </div>
 
-          {/* Content */}
-          <div className="max-w-4xl mx-auto px-4 py-6">
-            {activeTab === 'stream' && (
-              <div className="space-y-4">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-start space-x-3">
-                    <MessageSquare size={20} className="text-gray-400 mt-1" />
-                    <div className="flex-1">
-                      <input
-                        type="text"
-                        placeholder="Share something with your class..."
-                        className="w-full border-b border-gray-200 pb-2 focus:outline-none focus:border-blue-500"
-                      />
-                    </div>
-                  </div>
+
+            {activeTab === 'subjects' && (
+              <div>
+                <h2 className="text-2xl font-bold mb-4 flex items-center"><FileText className="mr-2" />Subjects</h2>
+                <div className="space-y-4">
+                  {Array.isArray(subjects) && subjects.length > 0 ? (
+                    subjects.map((subject, idx) => (
+                      <SubjectCard key={subject?._id || idx} subject={{
+                        _id: subject?._id || idx,
+                        name: subject?.name || 'Untitled Subject',
+                        description: subject?.description || '',
+                        materials: subject?.materials || [],
+                        assignments: subject?.assignments || [],
+                      }} />
+                    ))
+                  ) : (
+                    <div className="text-center py-8 text-gray-400">No subjects available yet.</div>
+                  )}
                 </div>
-
-                <div className="text-center py-12 text-gray-500">
-                  <MessageSquare size={48} className="mx-auto mb-4 text-gray-300" />
-                  <p>This is where you'll see announcements from your teacher</p>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'classwork' && (
-              <div className="space-y-6">
-                {subjects?.map((subject) => (
-                  <SubjectCard key={subject._id} subject={subject} />
-                ))}
-
-                {(!subjects || subjects.length === 0) && (
-                  <div className="text-center py-12 text-gray-500">
-                    <FileText size={48} className="mx-auto mb-4 text-gray-300" />
-                    <p>No subjects available yet</p>
-                  </div>
-                )}
               </div>
             )}
 
             {activeTab === 'people' && (
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-                <div className="p-6">
+              <div>
+                <h2 className="text-2xl font-bold mb-4 flex items-center"><Users className="mr-2" />People</h2>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Teacher</h3>
                   <div className="flex items-center space-x-3 mb-6">
                     <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">

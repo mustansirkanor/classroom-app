@@ -12,7 +12,7 @@ const CreateSubjectModal = ({ isOpen, onClose, classroomId }) => {
   const queryClient = useQueryClient();
 
   const createSubjectMutation = useMutation(
-    (data) => api.post('/teacher/subject', { ...data, classroomId }),
+    (data) => api.post('/api/teacher/subject', { ...data, classroomId }),
     {
       onSuccess: () => {
         toast.success('Subject created successfully!');

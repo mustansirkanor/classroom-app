@@ -51,151 +51,24 @@
 // };
 
 // export default authService;
-// Mock API responses for development
-const mockData = {
-  studentDashboard: {
-    classrooms: [
-      {
-        _id: '1',
-        name: 'Computer Science 101',
-        description: 'Introduction to Programming',
-        classCode: 'CS101A',
-        teacherId: { name: 'Prof. Smith', email: 'smith@example.com' },
-        students: Array(25).fill().map((_, i) => ({ _id: i, name: `Student ${i+1}` })),
-        subjects: ['Programming', 'Algorithms'],
-        createdAt: new Date().toISOString()
-      },
-      {
-        _id: '2',
-        name: 'Mathematics',
-        description: 'Advanced Calculus',
-        classCode: 'MATH201',
-        teacherId: { name: 'Prof. Johnson', email: 'johnson@example.com' },
-        students: Array(30).fill().map((_, i) => ({ _id: i, name: `Student ${i+1}` })),
-        subjects: ['Calculus', 'Linear Algebra'],
-        createdAt: new Date().toISOString()
-      },
-      {
-        _id: '3',
-        name: 'Physics',
-        description: 'Quantum Mechanics',
-        classCode: 'PHY301',
-        teacherId: { name: 'Prof. Wilson', email: 'wilson@example.com' },
-        students: Array(20).fill().map((_, i) => ({ _id: i, name: `Student ${i+1}` })),
-        subjects: ['Quantum Physics', 'Thermodynamics'],
-        createdAt: new Date().toISOString()
-      },
-      {
-        _id: '4',
-        name: 'Chemistry',
-        description: 'Organic Chemistry',
-        classCode: 'CHEM201',
-        teacherId: { name: 'Prof. Brown', email: 'brown@example.com' },
-        students: Array(28).fill().map((_, i) => ({ _id: i, name: `Student ${i+1}` })),
-        subjects: ['Organic Chemistry', 'Biochemistry'],
-        createdAt: new Date().toISOString()
-      },
-      {
-        _id: '5',
-        name: 'English Literature',
-        description: 'Modern Literature',
-        classCode: 'ENG301',
-        teacherId: { name: 'Prof. Davis', email: 'davis@example.com' },
-        students: Array(22).fill().map((_, i) => ({ _id: i, name: `Student ${i+1}` })),
-        subjects: ['Poetry', 'Drama'],
-        createdAt: new Date().toISOString()
-      }
-    ],
-    stats: {
-      totalClassrooms: 5,
-      totalSubjects: 10,
-      totalMaterials: 45,
-      completedMaterials: 32,
-      progressPercentage: 71
-    }
-  },
-  teacherDashboard: {
-    classrooms: [
-      {
-        _id: '1',
-        name: 'Computer Science 101',
-        description: 'Introduction to Programming',
-        classCode: 'CS101A',
-        students: Array(25).fill().map((_, i) => ({ 
-          _id: i, 
-          name: `Student ${i+1}`, 
-          email: `student${i+1}@example.com` 
-        })),
-        subjects: ['Programming Basics', 'Data Structures'],
-        createdAt: new Date().toISOString()
-      },
-      {
-        _id: '2',
-        name: 'Advanced Programming',
-        description: 'Object-Oriented Programming',
-        classCode: 'CS201B',
-        students: Array(20).fill().map((_, i) => ({ 
-          _id: i, 
-          name: `Student ${i+1}`, 
-          email: `student${i+1}@example.com` 
-        })),
-        subjects: ['OOP Concepts', 'Design Patterns'],
-        createdAt: new Date().toISOString()
-      }
-    ],
-    stats: {
-      totalClassrooms: 2,
-      totalStudents: 45,
-      totalSubjects: 4,
-      totalMaterials: 15,
-      totalAssignments: 8
-    }
-  }
-};
 
-// Mock API client
-const api = {
-  get: (url) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (url === '/student/dashboard') {
-          resolve({ data: mockData.studentDashboard });
-        } else if (url === '/teacher/dashboard') {
-          resolve({ data: mockData.teacherDashboard });
-        } else {
-          resolve({ data: {} });
-        }
-      }, 500); // Simulate network delay
-    });
-  },
-  post: (url, data) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ data: { message: 'Success', ...data } });
-      }, 500);
-    });
-  },
-  put: (url, data) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ data: { message: 'Updated successfully', ...data } });
-      }, 500);
-    });
-  },
-  delete: (url) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ data: { message: 'Deleted successfully' } });
-      }, 500);
-    });
-  },
-  patch: (url, data) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ data: { message: 'Updated successfully', ...data } });
-      }, 500);
-    });
+
+import axios from 'axios';
+
+const BASE_URL = 'http://localhost:5000'; // Change if your backend runs elsewhere
+
+const api = axios.create({
+  baseURL: BASE_URL,
+  withCredentials: true // if you use cookies/auth
+});
+
+// Add interceptor to send token in Authorization header
+api.interceptors.request.use(config => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-};
+  return config;
+});
 
 export default api;

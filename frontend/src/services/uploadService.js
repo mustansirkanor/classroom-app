@@ -6,7 +6,7 @@ export const uploadService = {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await api.post('/upload/single', formData, {
+  const response = await api.post('/api/upload/single', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -30,7 +30,7 @@ export const uploadService = {
       formData.append('files', file);
     });
 
-    const response = await api.post('/upload/multiple', formData, {
+  const response = await api.post('/api/upload/multiple', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -52,7 +52,7 @@ export const uploadService = {
     const formData = new FormData();
     formData.append('avatar', file);
 
-    const response = await api.post('/upload/avatar', formData, {
+  const response = await api.post('/api/upload/avatar', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -71,7 +71,7 @@ export const uploadService = {
 
   // Delete file
   deleteFile: async (fileUrl) => {
-    const response = await api.delete('/upload/delete', {
+  const response = await api.delete('/api/upload/delete', {
       data: { fileUrl }
     });
     return response.data;
@@ -79,13 +79,13 @@ export const uploadService = {
 
   // Get file info
   getFileInfo: async (fileUrl) => {
-    const response = await api.get(`/upload/info?url=${encodeURIComponent(fileUrl)}`);
+  const response = await api.get(`/api/upload/info?url=${encodeURIComponent(fileUrl)}`);
     return response.data;
   },
 
   // Generate signed URL for direct upload
   getSignedUrl: async (fileName, fileType) => {
-    const response = await api.post('/upload/signed-url', {
+  const response = await api.post('/api/upload/signed-url', {
       fileName,
       fileType
     });

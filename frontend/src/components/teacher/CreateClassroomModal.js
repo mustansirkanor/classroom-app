@@ -12,7 +12,7 @@ const CreateClassroomModal = ({ isOpen, onClose }) => {
   const queryClient = useQueryClient();
 
   const createClassroomMutation = useMutation(
-    (data) => api.post('/teacher/classroom', data),
+    (data) => api.post('/api/teacher/classroom', data),
     {
       onSuccess: () => {
         toast.success('Classroom created successfully!');

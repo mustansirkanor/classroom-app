@@ -15,11 +15,11 @@ const AssignmentManagement = () => {
 
   const { data: assignments, isLoading } = useQuery(
     'teacherAssignments',
-    () => api.get('/teacher/assignments').then(res => res.data)
+    () => api.get('api/teacher/assignments').then(res => res.data)
   );
 
   const deleteAssignmentMutation = useMutation(
-    (assignmentId) => api.delete(`/teacher/assignment/${assignmentId}`),
+    (assignmentId) => api.delete(`api/teacher/assignment/${assignmentId}`),
     {
       onSuccess: () => {
         toast.success('Assignment deleted successfully!');

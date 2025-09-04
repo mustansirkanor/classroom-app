@@ -15,7 +15,7 @@ const CreateAssignmentModal = ({ isOpen, onClose, subjectId }) => {
   const queryClient = useQueryClient();
 
   const createAssignmentMutation = useMutation(
-    (data) => api.post('/teacher/assignment', { ...data, subjectId }),
+    (data) => api.post('api/teacher/assignment', { ...data, subjectId }),
     {
       onSuccess: () => {
         toast.success('Assignment created successfully!');

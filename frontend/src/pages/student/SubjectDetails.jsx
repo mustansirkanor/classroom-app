@@ -19,23 +19,23 @@ const SubjectDetails = () => {
 
   const { data: subject, isLoading } = useQuery(
     ['subject', subjectId],
-    () => api.get(`/student/subject/${subjectId}`).then(res => res.data)
+    () => api.get(`/api/student/subject/${subjectId}`).then(res => res.data)
   );
 
   const { data: materials } = useQuery(
     ['materials', subjectId],
-    () => api.get(`/student/materials/${subjectId}`).then(res => res.data),
+    () => api.get(`api/student/materials/${subjectId}`).then(res => res.data),
     { enabled: !!subjectId }
   );
 
   const { data: assignments } = useQuery(
     ['assignments', subjectId],
-    () => api.get(`/student/assignments/${subjectId}`).then(res => res.data),
+    () => api.get(`api/student/assignments/${subjectId}`).then(res => res.data),
     { enabled: !!subjectId }
   );
 
   const markCompleteMutation = useMutation(
-    (materialId) => api.patch(`/student/progress/${materialId}`, { completed: true, progress: 100 }),
+    (materialId) => api.patch(`api/student/progress/${materialId}`, { completed: true, progress: 100 }),
     {
       onSuccess: () => {
         toast.success('Material marked as complete!');
@@ -127,7 +127,7 @@ const SubjectDetails = () => {
                       Learning Materials ({materials?.length || 0})
                     </h2>
                     
-                    {materials?.length > 0 ? (
+                    {Array.isArray(materials) && materials.length > 0 ? (
                       materials.map((material) => (
                         <MaterialCard 
                           key={material._id} 
@@ -171,8 +171,8 @@ const SubjectDetails = () => {
               {/* Sidebar */}
               <div className="lg:col-span-1">
                 <ProgressTracker 
-                  progress={materials?.map(m => m.progress).filter(Boolean) || []}
-                  totalMaterials={materials?.length || 0}
+                  progress={Array.isArray(materials) ? materials.map(m => m.progress).filter(Boolean) : []}
+                  totalMaterials={Array.isArray(materials) ? materials.length : 0}
                 />
               </div>
             </div>

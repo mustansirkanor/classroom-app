@@ -1,9 +1,42 @@
-import React from 'react';
+
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, FileText, MoreVertical, Calendar } from 'lucide-react';
+import studentClassroomService from '../../services/studentClassroomService';
 
-const ClassroomCard = ({ classroom, index }) => {
+
+const ClassroomCard = ({ classroom, index, onDelete }) => {
   const navigate = useNavigate();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const handleDelete = async (e) => {
+    e.stopPropagation();
+    setDropdownOpen(false);
+    if (window.confirm('Are you sure you want to leave/delete this classroom?')) {
+      try {
+        await studentClassroomService.leaveClassroom(classroom._id);
+        if (onDelete) onDelete(classroom._id);
+      } catch (err) {
+        alert('Failed to delete classroom.');
+      }
+    }
+  };
+
+  // Close dropdown on outside click
+  React.useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [dropdownOpen]);
 
   const getClassroomColor = (index) => {
     const colors = [
@@ -34,12 +67,27 @@ const ClassroomCard = ({ classroom, index }) => {
             <p className="text-sm opacity-90 mb-1">{classroom.classCode}</p>
             <p className="text-xs opacity-75">{classroom.teacherId?.name}</p>
           </div>
-          <button 
-            className="text-white hover:bg-white hover:bg-opacity-20 p-1 rounded"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <MoreVertical size={20} />
-          </button>
+          <div className="relative" ref={dropdownRef}>
+            <button
+              className="text-white hover:bg-white hover:bg-opacity-20 p-1 rounded"
+              onClick={e => {
+                e.stopPropagation();
+                setDropdownOpen((open) => !open);
+              }}
+            >
+              <MoreVertical size={20} />
+            </button>
+            {dropdownOpen && (
+              <div className="absolute right-0 mt-2 w-32 bg-white rounded shadow-lg z-10 border border-gray-200">
+                <button
+                  className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                  onClick={handleDelete}
+                >
+                  Exit
+                </button>
+              </div>
+            )}
+          </div>
         </div>
         
         {/* Teacher Avatar */}
