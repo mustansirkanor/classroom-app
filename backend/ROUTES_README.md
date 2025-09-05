@@ -613,4 +613,6 @@ For more details, refer to the individual route files in `backend/routes/` or as
 **Description:** Get all assignments created by the teacher.
 **Headers:** `Authorization: Bearer <JWT_TOKEN>`
 **Body:** None  
-**Response:** Array of
+**Response:** Array of assignment objects
+
+...existing code...
