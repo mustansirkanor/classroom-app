@@ -1,0 +1,83 @@
+services:
+  # MongoDB Database (same as production)
+  mongodb:
+    image: mongo:7-jammy
+    container_name: classroom-mongodb-dev
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: classroom
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data_dev:/data/db
+      - mongodb_config_dev:/data/configdb
+    networks:
+      - classroom-network-dev
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/classroom --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Backend API with Hot Reloading
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: classroom-backend-dev
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 5000
+      MONGODB_URI: mongodb://mongodb:27017/classroom
+      JWT_SECRET: ${JWT_SECRET:-MUSTANSIR_SEXY_NAHI_HAIN}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME:-CLASSROOM}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY:-936223348363922}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET:-yHElpxYv-LUATfXNPIWd6fuigYw}
+      CLOUDINARY_URL: ${CLOUDINARY_URL:-cloudinary://936223348363922:yHElpxYv-LUATfXNPIWd6fuigYw@dyprqc87k}
+    ports:
+      - "5000:5000"
+      - "9229:9229"  # Debug port
+    volumes:
+      - ./backend:/app
+      - /app/node_modules  # Anonymous volume to prevent overwriting node_modules
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - classroom-network-dev
+    stdin_open: true
+    tty: true
+
+  # Frontend React App with Hot Reloading
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: classroom-frontend-dev
+    restart: unless-stopped
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_API_URL=http://localhost:5000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules  # Anonymous volume to prevent overwriting node_modules
+    depends_on:
+      - backend
+    networks:
+      - classroom-network-dev
+    stdin_open: true
+    tty: true
+
+volumes:
+  mongodb_data_dev:
+    driver: local
+  mongodb_config_dev:
+    driver: local
+
+networks:
+  classroom-network-dev:
+    driver: bridge

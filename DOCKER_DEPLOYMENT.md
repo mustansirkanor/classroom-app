@@ -2,22 +2,22 @@
 
 This guide explains how to deploy the Classroom App using Docker and Docker Compose.
 
-## 🏗️ Architecture
+## Architecture
 
 The application consists of three main services:
 - **Frontend**: React application served by Nginx (Port 80)
 - **Backend**: Node.js/Express API server (Port 5000)
 - **Database**: MongoDB (Port 27017)
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Docker Desktop installed and running
 - Docker Compose (included with Docker Desktop)
 - Git (to clone the repository)
 
-## 🚀 Quick Start
+## Quick Start
 
-### Option 1: Use deployment script (Recommended)
+### Option 1: Production Mode
 
 **Windows:**
 ```bash
@@ -30,7 +30,20 @@ chmod +x deploy.sh
 ./deploy.sh
 ```
 
-### Option 2: Manual deployment
+### Option 2: Development Mode with Hot Reloading 
+
+**Windows:**
+```bash
+./deploy.dev.bat
+```
+
+**Linux/macOS:**
+```bash
+chmod +x deploy.dev.sh
+./deploy.dev.sh
+```
+
+### Option 3: Manual deployment
 
 1. **Clone the repository** (if not already done):
 ```bash
@@ -48,13 +61,13 @@ docker-compose up --build -d
 docker-compose ps
 ```
 
-## 🌐 Access the Application
+## Access the Application
 
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:5000
 - **MongoDB**: localhost:27017
 
-## 📊 Monitoring and Logs
+## Monitoring and Logs
 
 ### View logs for all services:
 ```bash
@@ -103,9 +116,50 @@ cp .env.example .env.production
    - MongoDB data is persisted in Docker volumes
    - Backup volumes regularly in production
 
-## 🛠️ Development
+## Development
 
-### Running in development mode:
+### Development Mode with Hot Reloading
+
+For active development with instant code changes:
+
+**Windows:**
+```bash
+./deploy.dev.bat
+```
+
+**Linux/macOS:**
+```bash
+./deploy.dev.sh
+```
+
+**Features:**
+- ✅ **Frontend Hot Reload**: Edit React files and see changes instantly
+- ✅ **Backend Hot Reload**: Edit Node.js files and server restarts automatically  
+- ✅ **Debug Support**: Backend debugger available on port 9229
+- ✅ **Volume Mapping**: Your local code is mapped into containers
+- ✅ **Separate Database**: Uses development-specific MongoDB volumes
+
+**Access URLs (Development):**
+- **Frontend**: http://localhost:3000 (with hot reload)
+- **Backend API**: http://localhost:5000 (with hot reload)
+- **Backend Debugger**: localhost:9229
+- **MongoDB**: localhost:27017
+
+**Manual Development Commands:**
+```bash
+# Start development mode
+docker-compose -f docker-compose.dev.yml up --build -d
+
+# View development logs
+docker-compose -f docker-compose.dev.yml logs -f
+
+# Stop development mode
+docker-compose -f docker-compose.dev.yml down
+```
+
+### Traditional Development (Local + Docker DB)
+
+If you prefer running frontend/backend locally with only MongoDB in Docker:
 
 1. **Start only MongoDB**:
 ```bash
@@ -125,7 +179,7 @@ npm install
 npm start
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 classroom-app/
@@ -143,7 +197,7 @@ classroom-app/
 │   └── ...                 # Frontend source code
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues:
 
@@ -226,7 +280,7 @@ docker cp ./mongodb-backup classroom-mongodb:/data/restore
 docker-compose exec mongodb mongorestore /data/restore
 ```
 
-## 🛑 Stopping the Application
+## Stopping the Application
 
 ```bash
 # Stop all services
@@ -235,13 +289,3 @@ docker-compose down
 # Stop and remove volumes (⚠️ This will delete all data)
 docker-compose down -v
 ```
-
-## 📞 Support
-
-If you encounter any issues during deployment, please check:
-1. Docker Desktop is running
-2. Ports 80, 5000, and 27017 are available
-3. Your system meets the minimum requirements
-4. All environment variables are properly configured
-
-For additional help, please refer to the main project documentation or create an issue in the repository.
