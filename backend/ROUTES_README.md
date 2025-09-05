@@ -487,3 +487,130 @@ Response: `{ "message": "Assignment deleted successfully" }`
 ---
 
 For more details, refer to the individual route files in `backend/routes/` or ask the backend team for specific request/response examples.
+
+
+
+...existing code...
+
+---
+
+## Additional Student Routes (`routes/student.js`)
+
+### GET /api/student/announcements
+**Description:** Get all announcements for all classrooms the student is enrolled in.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:** None  
+**Response:** Array of announcement objects
+
+### GET /api/student/announcements/:classroomId
+**Description:** Get announcements for a specific classroom.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:** None  
+**Response:** Array of announcement objects
+
+### GET /api/student/classroom/:classroomId
+**Description:** Get classroom details for a student.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:** None  
+**Response:** Classroom object
+
+### GET /api/student/subject/:subjectId
+**Description:** Get subject details for a student.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:** None  
+**Response:** Subject object
+
+### GET /api/student/classrooms-enrolled
+**Description:** Get all classrooms where the student is enrolled.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:** None  
+**Response:** Array of classroom objects
+
+### GET /api/student/subjects-enrolled
+**Description:** Get all subjects where the student is enrolled.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:** None  
+**Response:** Array of subject objects
+
+### GET /api/student/all-subjects
+**Description:** Get all subjects for the student.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:** None  
+**Response:** Array of subject objects
+
+### GET /api/student/all-materials
+**Description:** Get all materials for the student.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:** None  
+**Response:** Array of material objects
+
+### GET /api/student/completed-materials
+**Description:** Get all completed materials for the student.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:** None  
+**Response:** Array of material objects
+
+---
+
+## Additional Teacher Routes (`routes/teacher.js`)
+
+### GET /api/teacher/announcements/:classroomId
+**Description:** Get announcements for a classroom.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:** None  
+**Response:** Array of announcement objects
+
+### POST /api/teacher/announcements/:classroomId
+**Description:** Post a new announcement for a classroom.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:**
+```
+{
+  "title": "string",
+  "content": "string"
+}
+```
+**Response:**
+```
+{
+  "message": "Announcement posted successfully",
+  "announcement": { ... }
+}
+```
+
+### GET /api/teacher/classroom/:classroomId
+**Description:** Get classroom by ID with populated students and subjects.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:** None  
+**Response:** Classroom object (with students and subjects)
+
+### GET /api/teacher/subject/:subjectId
+**Description:** Get subject details by ID.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:** None  
+**Response:** Subject object
+
+### GET /api/teacher/search-classrooms?query=searchTerm
+**Description:** Search classrooms by name or class code.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Query Params:**
+- `query`: string (required, part or full name/code)
+**Response:** Array of matching classroom objects
+
+### GET /api/teacher/subjects-created
+**Description:** Get all subjects created by the teacher.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:** None  
+**Response:** Array of subject objects
+
+### GET /api/teacher/materials-created
+**Description:** Get all materials created by the teacher.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:** None  
+**Response:** Array of material objects
+
+### GET /api/teacher/assignments-created
+**Description:** Get all assignments created by the teacher.
+**Headers:** `Authorization: Bearer <JWT_TOKEN>`
+**Body:** None  
+**Response:** Array of
