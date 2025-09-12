@@ -1,0 +1,195 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x, 20.x]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm run install:all
+      
+    - name: Run backend tests
+      run: npm run test:backend:ci
+      env:
+        NODE_ENV: test
+        JWT_SECRET: test-jwt-secret
+        MONGODB_URI: mongodb://localhost:27017/test
+        CLOUDINARY_CLOUD_NAME: test-cloud
+        CLOUDINARY_API_KEY: test-api-key
+        CLOUDINARY_API_SECRET: test-api-secret
+        
+    - name: Run frontend tests
+      run: npm run test:frontend:ci
+      env:
+        CI: true
+        REACT_APP_API_URL: http://localhost:5000
+        
+    - name: Upload backend coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./backend/coverage/lcov.info
+        flags: backend
+        name: backend-coverage
+        
+    - name: Upload frontend coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./frontend/coverage/lcov.info
+        flags: frontend
+        name: frontend-coverage
+        
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./backend/coverage/lcov.info,./frontend/coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  test-backend-only:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        
+    - name: Install backend dependencies
+      run: cd backend && npm install
+      
+    - name: Run backend tests
+      run: cd backend && npm run test:ci
+      env:
+        NODE_ENV: test
+        JWT_SECRET: test-jwt-secret
+        MONGODB_URI: mongodb://localhost:27017/test
+        CLOUDINARY_CLOUD_NAME: test-cloud
+        CLOUDINARY_API_KEY: test-api-key
+        CLOUDINARY_API_SECRET: test-api-secret
+
+  test-frontend-only:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        
+    - name: Install frontend dependencies
+      run: cd frontend && npm install
+      
+    - name: Run frontend tests
+      run: cd frontend && npm run test:ci
+      env:
+        CI: true
+        REACT_APP_API_URL: http://localhost:5000
+
+  lint-and-format:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm run install:all
+      
+    - name: Run ESLint on backend
+      run: cd backend && npx eslint . --ext .js
+      
+    - name: Run ESLint on frontend
+      run: cd frontend && npx eslint src --ext .js,.jsx
+      
+    - name: Check Prettier formatting
+      run: |
+        cd backend && npx prettier --check .
+        cd ../frontend && npx prettier --check src
+
+  security-audit:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm run install:all
+      
+    - name: Run security audit on backend
+      run: cd backend && npm audit --audit-level moderate
+      
+    - name: Run security audit on frontend
+      run: cd frontend && npm audit --audit-level moderate
+
+  build-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm run install:all
+      
+    - name: Build frontend
+      run: npm run build
+      env:
+        REACT_APP_API_URL: http://localhost:5000
+        
+    - name: Test backend build
+      run: cd backend && npm run start &
+      env:
+        NODE_ENV: production
+        JWT_SECRET: test-jwt-secret
+        MONGODB_URI: mongodb://localhost:27017/test
+        CLOUDINARY_CLOUD_NAME: test-cloud
+        CLOUDINARY_API_KEY: test-api-key
+        CLOUDINARY_API_SECRET: test-api-secret

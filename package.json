@@ -1,0 +1,38 @@
+{
+  "name": "classroom-app",
+  "version": "1.0.0",
+  "description": "A comprehensive digital classroom management platform with AI-powered features",
+  "scripts": {
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test",
+    "test:watch": "npm run test:backend:watch & npm run test:frontend:watch",
+    "test:backend:watch": "cd backend && npm run test:watch",
+    "test:frontend:watch": "cd frontend && npm run test:watch",
+    "test:coverage": "npm run test:backend:coverage && npm run test:frontend:coverage",
+    "test:backend:coverage": "cd backend && npm run test:coverage",
+    "test:frontend:coverage": "cd frontend && npm run test:coverage",
+    "test:ci": "npm run test:backend:ci && npm run test:frontend:ci",
+    "test:backend:ci": "cd backend && npm run test:ci",
+    "test:frontend:ci": "cd frontend && npm run test:ci",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm start\"",
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && npm start"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "classroom",
+    "education",
+    "learning",
+    "management",
+    "ai",
+    "react",
+    "nodejs",
+    "mongodb"
+  ],
+  "author": "Classroom App Team",
+  "license": "MIT"
+}
